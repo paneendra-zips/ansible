@@ -1,5 +1,4 @@
 ---
-- include: prereq_setup.yml
 
 - name: Install Kibana
   package:
@@ -40,3 +39,5 @@
     group: root
     mode: 0644
   notify: restart_kibana
+
+...

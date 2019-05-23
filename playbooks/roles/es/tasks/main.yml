@@ -1,5 +1,5 @@
 ---
-- include_tasks: prereq-setup.yml
+# Install ElasticSearch with version and configuration mentioned in vars
 
 - name: Install Elasticsearch.
   package:
@@ -13,10 +13,7 @@
     owner: root
     group: elasticsearch
     mode: 0660
-  notify: restart elasticsearch
-
-- name: Force a restart if configuration has changed.
-  meta: flush_handlers
+  notify: restart_elasticsearch
 
 - name: Start Elasticsearch.
   service:
@@ -30,3 +27,5 @@
     port: "{{ elasticsearch_http_port }}"
     delay: 3
     timeout: 300
+
+...
