@@ -1,0 +1,42 @@
+---
+- include: prereq_setup.yml
+
+- name: Install Kibana
+  package:
+    name: "{{ kibana_package }}"
+    state: "{{ kibana_package_state }}"
+
+- name: Ensure Kibana service is started and enabled at boot
+  service:
+    name: kibana
+    state: "{{ kibana_service_state }}"
+    enabled: "{{ kibana_service_enabled }}"
+
+- name: Check if Kibana Config File Path is in /opt
+  stat:
+    path: /opt/kibana/config/kibana.yml 
+  register: opt_file_path
+  ignore_errors: true
+
+- name: Set /opt file path
+  set_fact: kibana_config_file_path = "/opt/kibana/config/kibana.yml"  
+  when: opt_file_path.stat.exists
+
+- name: Check if Kibana Config File Path is in /etc
+  stat:
+    path: /etc/default/kibana.yml
+  register: etc_file_path
+  ignore_errors: true
+
+- name: Set /etc file path
+  set_fact: kibana_config_file_path = "/etc/default/kibana.yml"
+  when: etc_file_path.stat.exists
+
+- name: Copy Kibana configuration from template
+  template:
+    src: "{{ kibana_config_template }}"
+    dest: "{{ kibana_config_file_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_kibana

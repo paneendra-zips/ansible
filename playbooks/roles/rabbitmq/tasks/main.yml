@@ -1,0 +1,14 @@
+---
+- name: Ensure erlang is installed.
+  package:
+    name: erlang
+    state: present
+
+# Install tasks
+- include: prereq-setup.yml
+
+- name: Ensure rabbitmq is started and enabled (if configured).
+  service:
+    name: "{{ rabbitmq_daemon }}"
+    state: "{{ rabbitmq_state }}"
+    enabled: "{{ rabbitmq_enabled }}"
