@@ -1,0 +1,32 @@
+---
+# Deploy ES, Kibana, MongoDB and RabbitMQ
+# The playbook can be scaled to do complete on-prem deployments
+
+- name: Deploy Elasticsearch
+  hosts: es_kibana
+  gather_facts: false
+  become: true
+  roles:
+    - es
+
+- name: Deploy Kibana
+  hosts: es_kibana
+  gather_facts: false
+  become: true
+  roles:
+    - kibana
+
+- name: Deploy MongoDB
+  hosts: mngdb_rabmq
+  gather_facts: false
+  become: true
+  roles:
+    - mongodb
+
+- name: Deploy RabbitMQ
+  hosts: mngdb_rabmq
+  gather_facts: false
+  become: true
+  roles:
+    - rabbitmq
+...

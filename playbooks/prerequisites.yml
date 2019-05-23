@@ -1,0 +1,11 @@
+---
+# Install all the pre-requisite packages
+
+- name: Install packages necessary for ES and Kibana
+  hosts: es_kibana
+  gather_facts: false
+  any_errors_fatal: true
+  become: true
+  roles:
+    - pre-reqs
+...

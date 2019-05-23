@@ -1,0 +1,17 @@
+[es_kibana]
+
+[mngdb_rabmq]
+
+[docker]
+
+[lb]
+
+[postgres]
+
+# Zee group that contains the all  groups as children
+[zee:children]
+es_kibana
+mngdb_rabmq
+docker
+postgres
+lb
