@@ -1,0 +1,15 @@
+---
+# tasks file for mongodb
+
+- name: Install mongo db
+  package: 
+    name: mongodb-org 
+    state: present
+
+- name: Ensure MongoDB service is started and enabled at boot
+  service:
+    name: mongod
+    state: started
+    enabled: true
+
+...

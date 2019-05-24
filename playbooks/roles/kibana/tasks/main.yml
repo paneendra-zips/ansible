@@ -7,13 +7,13 @@
 - name: Install Kibana
   package:
     name: "{{ kibana_package }}"
-    state: "{{ kibana_package_state }}"
+    state: present
 
 - name: Ensure Kibana service is started and enabled at boot
   service:
     name: kibana
-    state: "{{ kibana_service_state }}"
-    enabled: "{{ kibana_service_enabled }}"
+    state: started
+    enabled: true
 
 - name: Check if Kibana Config File Path is in /opt
   stat:
@@ -23,7 +23,7 @@
 
 - name: Set /opt file path
   set_fact: kibana_config_file_path = "/opt/kibana/config/kibana.yml"  
-  when: opt_file_path.stat.exists
+  when: opt_file_path.stat.exists == True
 
 - name: Check if Kibana Config File Path is in /etc
   stat:
@@ -33,7 +33,7 @@
 
 - name: Set /etc file path
   set_fact: kibana_config_file_path = "/etc/default/kibana.yml"
-  when: etc_file_path.stat.exists
+  when: etc_file_path.stat.exists == True and opt_file_path.stat.exists == False
 
 - name: Copy Kibana configuration from template
   template:
@@ -43,5 +43,4 @@
     group: root
     mode: 0644
   notify: restart_kibana
-
 ...
