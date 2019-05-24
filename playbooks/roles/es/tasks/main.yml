@@ -1,6 +1,9 @@
 ---
 # Install ElasticSearch with version and configuration mentioned in vars
 
+- name: Perform the pre-reqs
+  include_tasks: es_prereqs.yml
+
 - name: HTTPS APT transport for Elasticsearch repository.
   apt:
     name: apt-transport-https

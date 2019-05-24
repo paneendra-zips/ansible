@@ -1,4 +1,8 @@
 ---
+# Install Kibana 
+
+- name: Complete the Pre-reqs
+  include_tasks: kb_prereqs.yml
 
 - name: Install Kibana
   package:

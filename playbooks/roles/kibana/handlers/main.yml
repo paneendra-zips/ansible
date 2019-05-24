@@ -1,3 +1,6 @@
 ---
 - name: restart_kibana
-  service: name=kibana state=restarted
+  service: 
+    name: kibana 
+    state: restarted
+...

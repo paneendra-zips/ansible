@@ -1,6 +1,5 @@
 ---
-- name: Ensure dependency is installed
-  apt: name=apt-transport-https state=present
+# Perform check on data mount, dependencies, getset key and repo.
 
 - name: Check if Kibana mount exists
     stat:
@@ -11,7 +10,11 @@
     msg: "Kibana mount path does exist"
   when: kibana_mount_exists.stat.exists and kibana_mount_exists.stat.isdir
 
-- name: Add Elasticsearch apt key
+- fail:
+    msg: "Kibana mount path does not exist or is not a directory"
+  when: kibana_mount_exists.stat.exists == False or kibana_mount_exists.stat.isdir == False
+
+- name: Add Kibana apt key
   apt_key:
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
@@ -21,3 +24,9 @@
     repo: 'deb https://artifacts.elastic.co/packages/{{ kibana_version }}/apt stable main'
     state: present
     update_cache: true
+
+- name: Ensure dependency is installed
+  apt: 
+    name: apt-transport-https 
+    state: present
+...
