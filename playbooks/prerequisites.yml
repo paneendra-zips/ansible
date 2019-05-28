@@ -1,8 +1,10 @@
 ---
 # Install all the pre-requisite packages
 
-- name: Install packages necessary for ES and Kibana
+- name: Install Java8 packages necessary for ES and Kibana
+  hosts: es_kibana
 
-- import_playbook: roles/pre-reqs/tasks/es_kibana.yml
+- import_playbook: roles/common-tasks/tasks/install_java8.yml
+
 
 ...

@@ -2,7 +2,7 @@
 
 - name: Check if MongoDB mount exists
     stat:
-      path: /data/mongodb
+      path: /data/mongo
     register: mgdb_mount_exists
 
 - debug:

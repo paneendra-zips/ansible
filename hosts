@@ -1,4 +1,5 @@
 [es_kibana]
+52.173.32.184
 
 [mngdb_rabmq]
 
@@ -15,3 +16,9 @@ mngdb_rabmq
 docker
 postgres
 lb
+
+#Zee group variables
+[zee:vars]
+ansible_ssh_user=ubuntu
+ansible_ssh_common_args='-F /Users/paneendra/.ssh/config'
+

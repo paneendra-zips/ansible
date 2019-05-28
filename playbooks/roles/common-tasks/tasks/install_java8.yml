@@ -7,20 +7,27 @@
   become: true
   tasks:
   - name: Install add-apt-repostory
-    apt: name=software-properties-common state=latest
+    apt: 
+      name: software-properties-common 
+      state: latest
 
   - name: Add Oracle Java Repository
-    apt_repository: repo='ppa:webupd8team/java'
+    apt_repository: 
+      repo: 'ppa:webupd8team/java'
 
   - name: Accept Java 8 License
-    debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+    debconf: 
+      name: 'oracle-java8-installer' 
+      question: 'shared/accepted-oracle-license-v1-1' 
+      value: 'true' 
+      vtype: 'select'
 
-  - name: Install Oracle Java 8
+  - name: Install Open Java 8 JDK
     package: 
       name: "{{ item }}" 
       state: latest
     loop:
-      - oracle-java8-installer
+      - openjdk-8-jdk
       - ca-certificates
 
 ...

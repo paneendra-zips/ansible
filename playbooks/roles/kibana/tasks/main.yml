@@ -1,7 +1,7 @@
 ---
 # Install Kibana 
 
-- name: Complete the Pre-reqs
+- name: Begin the setup of the Pre-reqs
   include_tasks: kb_prereqs.yml
 
 - name: Install Kibana
@@ -35,6 +35,10 @@
   set_fact: kibana_config_file_path = "/etc/default/kibana.yml"
   when: etc_file_path.stat.exists == True and opt_file_path.stat.exists == False
 
+- fail:
+    msg: "Kibana config file - kibana.yml path does not exist in /etc or /opt "
+  when: etc_file_path.stat.exists == False or opt_file_path.stat.exists == False
+
 - name: Copy Kibana configuration from template
   template:
     src: "{{ kibana_config_template }}"
@@ -42,5 +46,5 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart_kibana
+
 ...

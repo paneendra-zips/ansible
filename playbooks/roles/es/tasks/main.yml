@@ -1,6 +1,12 @@
 ---
 # Install ElasticSearch with version and configuration mentioned in vars
 
+- name: Perform the pre-checks required for Elasticsearch
+  debug:
+    msg: "Pre-checks start"
+
+- include_tasks: roles/es/tasks/es_prereqs.yml
+
 - name: HTTPS APT transport for Elasticsearch repository.
   apt:
     name: apt-transport-https
@@ -29,13 +35,18 @@
     owner: root
     group: elasticsearch
     mode: 0660
-  notify: restart_elasticsearch
 
-- name: Update the JVM options file memory size
+- name: Update the Xms JVM options file memory size
   replace:
     path: /etc/elasticsearch/jvm.options
-    regexp: '^-Xm\w1g$'
-    replace: '^-Xm\w6g#$'
+    regexp: '^-Xms1g$'
+    replace: '-Xms6g'
+
+- name: Update the Xmx JVM options file memory size
+  replace:
+    path: /etc/elasticsearch/jvm.options
+    regexp: '^-Xmx1g$'
+    replace: '-Xmx6g'
 
 - name: Start Elasticsearch.
   service:
@@ -45,9 +56,9 @@
 
 - name: Make sure Elasticsearch is running before proceeding.
   wait_for:
-    host: "{{ elasticsearch_network_host }}"
+    host: localhost
     port: "{{ elasticsearch_http_port }}"
-    delay: 1
-    timeout: 10
+    delay: 3
+    timeout: 100
 
 ...

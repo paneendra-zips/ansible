@@ -12,4 +12,21 @@
     state: started
     enabled: true
 
+- name: Recursively change ownership of a directory
+  file:
+    path: /data/mongo
+    state: directory
+    recurse: yes
+    owner: mongodb
+    group: mongodb
+
+- name: Update Mongodb Configuration.
+  template:
+    src: mongodb.conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: 0660
+  notify: restart_mongod
+
 ...

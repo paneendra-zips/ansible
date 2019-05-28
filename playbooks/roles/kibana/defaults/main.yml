@@ -9,7 +9,5 @@ kibana_service_enabled: true
 
 kibana_config_template: kibana.yml.j2
 
-#kibana_config_file_path: /etc/default/kibana.yml
-#kibana_config_file_path: /opt/kibana/config/kibana.yml
-
 kibana_server_host: "localhost"
+...

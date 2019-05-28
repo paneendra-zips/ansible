@@ -2,9 +2,9 @@
 # Perform check on data mount, dependencies, getset key and repo.
 
 - name: Check if Kibana mount exists
-    stat:
-      path: /data/kibana
-    register: kibana_mount_exists
+  stat:
+    path: /data/kibana
+  register: kibana_mount_exists
 
 - debug:
     msg: "Kibana mount path does exist"
