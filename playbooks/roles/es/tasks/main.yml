@@ -1,9 +1,6 @@
 ---
 # Install ElasticSearch with version and configuration mentioned in vars
 
-- name: Perform the pre-reqs
-  include_tasks: es_prereqs.yml
-
 - name: HTTPS APT transport for Elasticsearch repository.
   apt:
     name: apt-transport-https
@@ -34,6 +31,12 @@
     mode: 0660
   notify: restart_elasticsearch
 
+- name: Update the JVM options file memory size
+  replace:
+    path: /etc/elasticsearch/jvm.options
+    regexp: '^-Xm\w1g$'
+    replace: '^-Xm\w6g#$'
+
 - name: Start Elasticsearch.
   service:
     name: elasticsearch
@@ -44,7 +47,7 @@
   wait_for:
     host: "{{ elasticsearch_network_host }}"
     port: "{{ elasticsearch_http_port }}"
-    delay: 3
-    timeout: 300
+    delay: 1
+    timeout: 10
 
 ...
