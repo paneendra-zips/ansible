@@ -15,7 +15,7 @@
     state: started
     enabled: true
 
-- name: Check if Kibana Config File Path is in /opt
+- name: Check if Kibana Config File Path is in /opt/kibana/config
   stat:
     path: /opt/kibana/config/kibana.yml 
   register: opt_file_path
@@ -25,19 +25,31 @@
   set_fact: kibana_config_file_path = "/opt/kibana/config/kibana.yml"  
   when: opt_file_path.stat.exists == True
 
-- name: Check if Kibana Config File Path is in /etc
+- name: Check if Kibana Config File Path is in /etc/kibana
   stat:
-    path: /etc/default/kibana.yml
+    path: /etc/kibana/kibana.yml
   register: etc_file_path
   ignore_errors: true
 
 - name: Set /etc file path
-  set_fact: kibana_config_file_path = "/etc/default/kibana.yml"
+  set_fact: kibana_config_file_path = "/etc/kibana/kibana.yml"
   when: etc_file_path.stat.exists == True and opt_file_path.stat.exists == False
+
+
+- name: Check if Kibana Config File Path is in /etc/default
+  stat:
+    path: /etc/default/kibana.yml
+  register: etc_dt_file_path
+  ignore_errors: true
+
+- name: Set /etc file path
+  set_fact: kibana_config_file_path = "/etc/default/kibana.yml"
+  when: etc_dt_file_path.stat.exists == True and opt_file_path.stat.exists == False and etc_file_path.stat.exists == False
+
 
 - fail:
     msg: "Kibana config file - kibana.yml path does not exist in /etc or /opt "
-  when: etc_file_path.stat.exists == False or opt_file_path.stat.exists == False
+  when: etc_file_path.stat.exists == False and opt_file_path.stat.exists == False and etc_dt_file_path.stat.exists == False 
 
 - name: Copy Kibana configuration from template
   template:
