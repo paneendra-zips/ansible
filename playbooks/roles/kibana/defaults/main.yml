@@ -1,5 +1,5 @@
 ---
-kibana_version: "7.x"
+kibana_version: "4.5"
 
 kibana_package: kibana
 kibana_package_state: present
@@ -10,4 +10,5 @@ kibana_service_enabled: true
 kibana_config_template: kibana.yml.j2
 
 kibana_server_host: "localhost"
+
 ...

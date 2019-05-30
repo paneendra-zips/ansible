@@ -1,14 +1,91 @@
 ---
-- name: Ensure erlang is installed.
-  package:
-    name: erlang
+# tasks file for RabbitMQ
+
+- name: Perform the prechecks for RabbitMQ
+  include_tasks: rbmq_prereqs.yml
+
+- name: Add to erlang-solutions list
+  apt_repository:
+    repo: deb https://packages.erlang-solutions.com/ubuntu xenial contrib
     state: present
+    update_cache: true
 
-# Install tasks
-- include: prereq-setup.yml
+- name: Get Erlang apt key
+  apt_key:
+    url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
 
-- name: Ensure rabbitmq is started and enabled (if configured).
+- name: Get RabbitMQ apt key
+  apt_key:
+    url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+
+- name: Add to bintray-rabbitmq list
+  apt_repository:
+    repo: deb https://dl.bintray.com/rabbitmq/debian xenial main
+    state: present
+    update_cache: true
+
+- name: Copy Erlang Config File
+  template:
+    src: erlang.conf.j2
+    dest: /etc/apt/preferences.d/erlang
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install erlang and RabbitMQ.
+  package:
+    name: "{{ list }}"
+    state: present
+    vars:
+      list:
+      - esl-erlang
+      - rabbitmq-server
+
+- name: Ensure the RabbitMQ server service is stopped
   service:
-    name: "{{ rabbitmq_daemon }}"
-    state: "{{ rabbitmq_state }}"
-    enabled: "{{ rabbitmq_enabled }}"
+    name: rabbitmq-server
+    state: stopped
+
+- name: Copy the RabbitMQ Env Config file
+  template:
+    src: rabbitmq-env.conf.j2
+    dest: /etc/rabbitmq/rabbitmq-env.conf
+    owner: root
+    group: rabbitmq
+    mode: 0644
+
+- name: Copy the limits.conf file
+  template:
+    src: rabbitmq-limit.conf.j2
+    dest: /etc/systemd/system/rabbitmq-server.service.d/limits.conf
+    owner:
+    group:
+    mode: 0644 
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /data/rabbitmq
+    state: directory
+    recurse: yes
+    owner: rabbitmq
+    group: rabbitmq
+
+- name: Ensure rabbitmq is started and enabled
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: true
+
+- name: Setup rabbitmq permissions
+  command: "{{ item }}"
+  loop:
+    - rabbitmqctl add_user zimperium zimperium
+    - rabbitmqctl set_permissions -p / zimperium '.*' '.*' '.*'
+    - rabbitmqctl set_user_tags zimperium administrator
+    - rabbitmqctl set_policy TTL '^(celery|stats)$' '{"message-ttl":25}'
+    - rabbitmqctl set_policy TTL2 '^-?[0-9]+' '{"message-ttl":25}'
+    - rabbitmq-plugins enable rabbitmq_management
+  notify:
+    - restart_rabbitmq
+
+...

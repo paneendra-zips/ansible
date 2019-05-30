@@ -3,8 +3,8 @@
 
 - name: Install Java8 packages necessary for ES and Kibana
   hosts: es_kibana
-
-- import_playbook: roles/common-tasks/tasks/install_java8.yml
-
-
+  gather_facts: true
+  become: true
+  roles:
+    - common-tasks
 ...

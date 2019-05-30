@@ -48,7 +48,7 @@
 
 
 - fail:
-    msg: "Kibana config file - kibana.yml path does not exist in /etc or /opt "
+    msg: "ERROR: Kibana config file - kibana.yml path does not exist in /etc or /opt. Configuration updates not completed"
   when: etc_file_path.stat.exists == False and opt_file_path.stat.exists == False and etc_dt_file_path.stat.exists == False 
 
 - name: Copy Kibana configuration from template

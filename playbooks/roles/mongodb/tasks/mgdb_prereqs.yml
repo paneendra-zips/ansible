@@ -1,9 +1,10 @@
+---
 # Get the Key, Update Repolist and check mount
 
 - name: Check if MongoDB mount exists
-    stat:
-      path: /data/mongo
-    register: mgdb_mount_exists
+  stat:
+    path: /data/mongo
+  register: mgdb_mount_exists
 
 - debug:
     msg: "MongoDB mount path does exist"
@@ -12,16 +13,5 @@
 - fail:
     msg: "MongoDB mount path does not exist or is not a directory"
   when: mgdb_mount_exists.stat.exists == False or mgdb_mount_exists.stat.isdir == False
-
-- name: Get MongoDB apt key
-  apt_key: 
-    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5  
-    keyserver: keyserver.ubuntu.com
-
-- name: Add to mongodb-org-3.6 list
-  apt_repository: 
-    repo: deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse
-    state: present
-    update_cache: true                                        
 
 ...

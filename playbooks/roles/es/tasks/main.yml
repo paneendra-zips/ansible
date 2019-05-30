@@ -2,10 +2,7 @@
 # Install ElasticSearch with version and configuration mentioned in vars
 
 - name: Perform the pre-checks required for Elasticsearch
-  debug:
-    msg: "Pre-checks start"
-
-#- include_tasks: roles/es/tasks/es_prereqs.yml
+  include_tasks: roles/es/tasks/es_prereqs.yml
 
 - name: HTTPS APT transport for Elasticsearch repository.
   apt:
@@ -54,11 +51,11 @@
     state: "{{ elasticsearch_service_state }}"
     enabled: "{{ elasticsearch_service_enabled }}"
 
-#- name: Make sure Elasticsearch is running before proceeding.
-#  wait_for:
-#    host: localhost
-#    port: "{{ elasticsearch_http_port }}"
-#    delay: 3
-#    timeout: 100
+- name: Make sure Elasticsearch is running before proceeding.
+  wait_for:
+    host: localhost
+    port: "{{ elasticsearch_http_port }}"
+    delay: 3
+    timeout: 100
 
 ...

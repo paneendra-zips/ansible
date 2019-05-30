@@ -1,0 +1,17 @@
+---
+# Get the Key, Update Repolist and check mount
+
+#- name: Check if MongoDB mount exists
+#    stat:
+#      path: /data/mongo
+#    register: mgdb_mount_exists
+
+#- debug:
+#    msg: "MongoDB mount path does exist"
+#  when: mgdb_mount_exists.stat.exists and mgdb_mount_exists.stat.isdir
+
+#- fail:
+#    msg: "MongoDB mount path does not exist or is not a directory"
+#  when: mgdb_mount_exists.stat.exists == False or mgdb_mount_exists.stat.isdir == False
+
+...

@@ -1,6 +1,20 @@
 ---
 # tasks file for mongodb
 
+- name: Perform the prechecks for Mongo DB
+  include_tasks: mgdb_prereqs.yml
+
+- name: Get MongoDB apt key
+  apt_key:
+    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    keyserver: keyserver.ubuntu.com
+
+- name: Add to mongodb-org-3.6 list
+  apt_repository:
+    repo: deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse
+    state: present
+    update_cache: true
+
 - name: Install mongo db
   package: 
     name: mongodb-org 
@@ -27,6 +41,5 @@
     owner: root
     group: root
     mode: 0660
-  notify: restart_mongod
 
 ...
