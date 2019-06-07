@@ -1,27 +1,17 @@
 ---
 # Get the Key, Update Repolist and check mount
 
-#- name: Check if RabbitMQ mount exists
-#    stat:
-#      path: /data/rabbitmq
-#    register: mgdb_mount_exists
+- name: Check if RabbitMQ mount exists
+    stat:
+      path: /data/rabbitmq
+    register: mgdb_mount_exists
 
-#- debug:
-#    msg: "RabbitMQ mount path does exist"
-#  when: rbmq_mount_exists.stat.exists and rbmq_mount_exists.stat.isdir
+- debug:
+    msg: "RabbitMQ mount path does exist"
+  when: rbmq_mount_exists.stat.exists and rbmq_mount_exists.stat.isdir
 
-#- fail:
-#    msg: "RabbitMQ mount path does not exist or is not a directory"
-#  when: rbmq_mount_exists.stat.exists == False or rbmq_mount_exists.stat.isdir == False
-
-- name: Download RabbitMQ package.
-  get_url:
-    url: "{{ rabbitmq_deb_url }}"
-    dest: "/tmp/{{ rabbitmq_deb }}"
-
-- name: Ensure RabbitMQ is installed.
-  apt:
-    deb: "/tmp/{{ rabbitmq_deb }}"
-    state: present
+- fail:
+    msg: "RabbitMQ mount path does not exist or is not a directory"
+  when: rbmq_mount_exists.stat.exists == False or rbmq_mount_exists.stat.isdir == False
 
 ...
