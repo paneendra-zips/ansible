@@ -24,6 +24,19 @@
     state: present
     update_cache: true
 
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ item  }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: rabbitmq
+    recurse: yes
+  loop:
+    - /etc/apt/preferences.d/
+    - /etc/rabbitmq/
+    - /etc/systemd/system/rabbitmq-server.service.d/
+
 - name: Copy Erlang Config File
   template:
     src: erlang.conf.j2
