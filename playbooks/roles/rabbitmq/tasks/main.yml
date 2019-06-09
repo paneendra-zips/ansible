@@ -28,9 +28,9 @@
   file:
     path: "{{ item  }}"
     state: directory
-    mode: '0755'
+    mode: '0775'
     owner: root
-    group: rabbitmq
+    group: root
     recurse: yes
   loop:
     - /etc/apt/preferences.d/
@@ -47,12 +47,11 @@
 
 - name: Install erlang and RabbitMQ.
   package:
-    name: "{{ list }}"
+    name: "{{ item }}"
     state: present
-    vars:
-      list:
-      - esl-erlang
-      - rabbitmq-server
+  loop:
+    - esl-erlang
+    - rabbitmq-server
 
 - name: Ensure the RabbitMQ server service is stopped
   service:
@@ -71,8 +70,8 @@
   template:
     src: rabbitmq-limit.conf.j2
     dest: /etc/systemd/system/rabbitmq-server.service.d/limits.conf
-    owner:
-    group:
+    owner: root
+    group: rabbitmq
     mode: 0644 
 
 - name: Recursively change ownership of a directory
